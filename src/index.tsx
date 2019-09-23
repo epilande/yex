@@ -9,7 +9,6 @@ import { NpmScript } from "./components";
 const App = () => {
   const [step, setStep] = React.useState(0);
   const [cmd, setCmd] = React.useState("");
-  const [addArgs, setAddArgs] = React.useState("");
   const [query, setQuery] = React.useState("");
   const [items, setItems] = React.useState<Item[]>([]);
 
@@ -28,15 +27,14 @@ const App = () => {
           {step === 0 && (
             <TextInput value={query} onChange={value => setQuery(value)} />
           )}
-          {cmd}{" "}
           {step === 1 ? (
             <TextInput
-              value={addArgs}
-              onChange={value => setAddArgs(value)}
+              value={cmd}
+              onChange={value => setCmd(value)}
               onSubmit={value => {
                 setStep(2);
                 try {
-                  execSync(`${cmd} ${value}`, {
+                  execSync(value, {
                     stdio: "inherit",
                   });
                 } catch (err) {
@@ -45,7 +43,7 @@ const App = () => {
               }}
             />
           ) : (
-            addArgs
+            cmd
           )}
         </Color>
       </Box>
@@ -55,8 +53,8 @@ const App = () => {
           items={filterItems(query, items)}
           itemComponent={NpmScript as any}
           onSelect={item => {
+            setCmd(`${item.value} `);
             setStep(1);
-            setCmd(item.value as string);
           }}
         />
       )}
