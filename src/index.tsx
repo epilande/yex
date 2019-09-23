@@ -2,11 +2,12 @@ import { execSync } from "child_process";
 import React from "react";
 import { render, Box, Text, Color } from "ink";
 import SelectInput from "ink-select-input";
-// import { UncontrolledTextInput } from "ink-text-input";
+import { UncontrolledTextInput } from "ink-text-input";
 import { composeItems, Item } from "./workspaces";
 import { NpmScript } from "./components";
 
 const App = () => {
+  const [step, setStep] = React.useState(0);
   const [cmd, setCmd] = React.useState("");
   const [items, setItems] = React.useState<Item[]>([]);
 
@@ -17,49 +18,45 @@ const App = () => {
     getWorkspaces();
   }, []);
 
-  const handleSelect = (item: Item) => {
-    setCmd(item.value);
-    try {
-      execSync(item.value, {
-        stdio: "inherit",
-      });
-    } catch (err) {
-      process.exit(0);
-    }
-  };
-
   return (
     <Box flexDirection="column">
       <Box>
-        <Text bold>What do you want to run?</Text> <Color green>{cmd}</Color>
+        <Text bold>Which command do you want to run?</Text>{" "}
+        <Color green>{cmd}</Color>
       </Box>
-      {!cmd && (
+      {step === 0 && (
         <SelectInput
           limit={10}
           items={items}
-          onSelect={handleSelect as any}
           itemComponent={NpmScript as any}
+          onSelect={item => {
+            setStep(1);
+            setCmd(item.value as string);
+          }}
         />
       )}
-      {/* {cmd && (
+      {step === 1 && (
         <Box>
-          <Box marginRight={1}>Enter your query:</Box>
+          <Box marginRight={1}>
+            <Text bold>Additional arguments?</Text>
+          </Box>
           <UncontrolledTextInput
-            onSubmit={() => {
-              // useKeyHandler((_str, key) => {
-              //   console.log("TCL: App -> key", key.name);
-              //   if (key.ctrl && key.name === "c") {
-              //     process.exit(0);
-              //   }
-              // });
-              // execSync(cmd, {
-              //   stdio: "inherit",
-              // });
-              // process.exit(0);
+            onSubmit={value => {
+              const newCmd = `${cmd} ${value}`;
+              setStep(2);
+              setCmd(newCmd);
+
+              try {
+                execSync(newCmd, {
+                  stdio: "inherit",
+                });
+              } catch (err) {
+                process.exit(0);
+              }
             }}
           />
         </Box>
-      )} */}
+      )}
     </Box>
   );
 };
