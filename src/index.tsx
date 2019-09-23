@@ -3,7 +3,7 @@ import React from "react";
 import { render, Box, Text, Color } from "ink";
 import SelectInput from "ink-select-input";
 import TextInput from "ink-text-input";
-import { composeItems, Item } from "./workspaces";
+import { composeItems, Item } from "./utils";
 import { NpmScript } from "./components";
 
 const App = () => {

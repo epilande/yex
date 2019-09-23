@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Text, Color } from "ink";
 import { ItemProps } from "ink-select-input";
-import { Item } from "./workspaces";
+import { Item } from "./utils";
 
 const NpmScript: React.FunctionComponent<Item & ItemProps> = props => {
   const { label, divider, preview, location } = props;
