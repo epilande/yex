@@ -14,6 +14,14 @@ export interface AllPackages {
   [key: string]: Package;
 }
 
+export interface Item {
+  label: string;
+  value: string;
+  divider?: boolean;
+  preview?: string;
+  location?: string;
+}
+
 const readFile = async (file: string) =>
   await JSON.parse(fs.readFileSync(file, "utf8"));
 
@@ -30,14 +38,6 @@ export const findWorkspaces = async (): Promise<AllPackages> => {
     return acc;
   }, {});
 };
-
-export interface Item {
-  label: string;
-  value: string;
-  divider?: boolean;
-  preview?: string;
-  location?: string;
-}
 
 export const composeItems = async () => {
   const workspaces = await findWorkspaces();
@@ -74,3 +74,30 @@ export const composeItems = async () => {
 
   return items;
 };
+
+const fuzzySearch = (needle: string, haystack: string) => {
+  const nlen = needle.length;
+  const hlen = haystack.length;
+
+  if (nlen > hlen) return false;
+  if (nlen === hlen) return needle === haystack;
+
+  outer: for (let i = 0, j = 0; i < nlen; i++) {
+    const nch = needle.charCodeAt(i);
+    while (j < hlen) {
+      if (haystack.charCodeAt(j++) === nch) {
+        continue outer;
+      }
+    }
+    return false;
+  }
+  return true;
+};
+
+export const filterItems = (text: string, items: Item[] = []) =>
+  items.filter(
+    item =>
+      fuzzySearch(text, item.label) ||
+      fuzzySearch(text, item.value) ||
+      fuzzySearch(text, item.preview || ""),
+  );

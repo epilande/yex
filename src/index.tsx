@@ -3,13 +3,14 @@ import React from "react";
 import { render, Box, Text, Color } from "ink";
 import SelectInput from "ink-select-input";
 import TextInput from "ink-text-input";
-import { composeItems, Item } from "./utils";
+import { composeItems, filterItems, Item } from "./utils";
 import { NpmScript } from "./components";
 
 const App = () => {
   const [step, setStep] = React.useState(0);
   const [cmd, setCmd] = React.useState("");
   const [addArgs, setAddArgs] = React.useState("");
+  const [query, setQuery] = React.useState("");
   const [items, setItems] = React.useState<Item[]>([]);
 
   React.useEffect(() => {
@@ -24,6 +25,9 @@ const App = () => {
       <Box>
         <Text bold>Which command do you want to run?</Text>{" "}
         <Color green>
+          {step === 0 && (
+            <TextInput value={query} onChange={value => setQuery(value)} />
+          )}
           {cmd}{" "}
           {step === 1 ? (
             <TextInput
@@ -48,7 +52,7 @@ const App = () => {
       {step === 0 && (
         <SelectInput
           limit={10}
-          items={items}
+          items={filterItems(query, items)}
           itemComponent={NpmScript as any}
           onSelect={item => {
             setStep(1);
