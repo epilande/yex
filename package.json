@@ -1,6 +1,6 @@
 {
   "name": "yex",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Yarn explorer",
   "main": "dist/index.js",
   "module": "dist/yex.esm.js",
