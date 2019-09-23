@@ -2,13 +2,14 @@ import { execSync } from "child_process";
 import React from "react";
 import { render, Box, Text, Color } from "ink";
 import SelectInput from "ink-select-input";
-import { UncontrolledTextInput } from "ink-text-input";
+import TextInput from "ink-text-input";
 import { composeItems, Item } from "./workspaces";
 import { NpmScript } from "./components";
 
 const App = () => {
   const [step, setStep] = React.useState(0);
   const [cmd, setCmd] = React.useState("");
+  const [addArgs, setAddArgs] = React.useState("");
   const [items, setItems] = React.useState<Item[]>([]);
 
   React.useEffect(() => {
@@ -22,7 +23,27 @@ const App = () => {
     <Box flexDirection="column">
       <Box>
         <Text bold>Which command do you want to run?</Text>{" "}
-        <Color green>{cmd}</Color>
+        <Color green>
+          {cmd}{" "}
+          {step === 1 ? (
+            <TextInput
+              value={addArgs}
+              onChange={value => setAddArgs(value)}
+              onSubmit={value => {
+                setStep(2);
+                try {
+                  execSync(`${cmd} ${value}`, {
+                    stdio: "inherit",
+                  });
+                } catch (err) {
+                  process.exit(0);
+                }
+              }}
+            />
+          ) : (
+            addArgs
+          )}
+        </Color>
       </Box>
       {step === 0 && (
         <SelectInput
@@ -34,28 +55,6 @@ const App = () => {
             setCmd(item.value as string);
           }}
         />
-      )}
-      {step === 1 && (
-        <Box>
-          <Box marginRight={1}>
-            <Text bold>Additional arguments?</Text>
-          </Box>
-          <UncontrolledTextInput
-            onSubmit={value => {
-              const newCmd = `${cmd} ${value}`;
-              setStep(2);
-              setCmd(newCmd);
-
-              try {
-                execSync(newCmd, {
-                  stdio: "inherit",
-                });
-              } catch (err) {
-                process.exit(0);
-              }
-            }}
-          />
-        </Box>
       )}
     </Box>
   );
