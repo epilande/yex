@@ -18,6 +18,8 @@
     "build": "tsdx build --target node",
     "test": "tsdx test",
     "lint": "tsdx lint",
+    "clean": "npx rimraf node_modules dist",
+    "prepare": "yarn build",
     "format": "pretty-quick"
   },
   "peerDependencies": {},
