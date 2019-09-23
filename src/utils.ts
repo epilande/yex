@@ -30,9 +30,16 @@ export const findPackages = () =>
 
 export const findWorkspaces = async (): Promise<AllPackages> => {
   const packages = findPackages();
-  const results = await Promise.all(packages.map(p => readFile(p)));
+  let results: any[];
 
-  return results.reduce((acc, result, index) => {
+  try {
+    results = await Promise.all(packages.map(p => readFile(p)));
+  } catch (err) {
+    console.log("\x1b[31m", "Error: Unable to process projects..");
+    process.exit(1);
+  }
+
+  return results!.reduce((acc, result, index) => {
     const p = packages[index];
     acc[p] = pick(result, ["name", "version", "scripts"]);
     return acc;
@@ -75,7 +82,7 @@ export const composeItems = async () => {
   return items;
 };
 
-const fuzzySearch = (needle: string, haystack: string) => {
+const fuzzySearch = (needle: string = "", haystack: string = "") => {
   const nlen = needle.length;
   const hlen = haystack.length;
 
@@ -99,5 +106,5 @@ export const filterItems = (text: string, items: Item[] = []) =>
     item =>
       fuzzySearch(text, item.label) ||
       fuzzySearch(text, item.value) ||
-      fuzzySearch(text, item.preview || ""),
+      fuzzySearch(text, item.preview),
   );
