@@ -12,7 +12,7 @@
 </p>
 
 <div align="center">
-  <img src="demo.gif" height="420">
+  <img src="https://raw.githubusercontent.com/epilande/yex/master/demo.gif" height="420">
 </div>
 
 ## Why?
@@ -33,9 +33,27 @@ This tool aims to improve discoverability and make it easier to work with `yarn 
 ## Installation
 
 ```bash
-$ npx yex
-# OR
 $ npm install -g yex
+# OR
+$ npx yex
+```
+
+## CLI
+
+```shell
+  Usage:
+    $ yex [options]
+
+  Options:
+    --limit, -l     Limit number of items to display.
+    --copy, -c      Copy command to clipboard.
+    --help, -h      Display this message.
+    --version, -v   CLI Version.
+
+  Examples:
+    $ yex
+    $ yex --copy
+    $ yex --limit=5
 ```
 
 ## License
