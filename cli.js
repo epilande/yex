@@ -1,7 +1,45 @@
 #!/usr/bin/env node
 
 const path = require("path");
+const meow = require("meow");
 const { renderApp } = require("./dist/index");
+
+const cli = meow(
+  `
+  Usage:
+    $ yex <options>
+
+  Options:
+    --limit, -l     Limit number of items to display.
+    --copy, -c      Copy command to clipboard.
+    --help, -h      Display this message.
+    --version, -v   CLI Version.
+
+  Examples:
+    $ yex
+    $ yex --limit=5
+`,
+  {
+    flags: {
+      limit: {
+        type: "string",
+        alias: "l",
+      },
+      copy: {
+        type: "boolean",
+        alias: "c",
+      },
+      help: {
+        type: "boolean",
+        alias: "h",
+      },
+      version: {
+        type: "boolean",
+        alias: "v",
+      },
+    },
+  },
+);
 
 try {
   require(path.resolve("package.json"));
@@ -13,4 +51,4 @@ try {
   process.exit(1);
 }
 
-renderApp();
+renderApp(cli.flags);
