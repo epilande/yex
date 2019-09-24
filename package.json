@@ -1,7 +1,7 @@
 {
   "name": "yex",
   "version": "1.0.1",
-  "description": "Yarn explorer",
+  "description": "Yarn explore and execute",
   "main": "dist/index.js",
   "module": "dist/yex.esm.js",
   "typings": "dist/index.d.ts",
@@ -46,6 +46,21 @@
   },
   "author": "Emmanuel Pilande",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/epilande/yex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/epilande/yex/issues"
+  },
+  "keywords": [
+    "yarn",
+    "yarn-workspaces",
+    "cli",
+    "react",
+    "ink",
+    "typescript"
+  ],
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged"
