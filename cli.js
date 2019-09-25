@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const { execSync } = require("child_process");
 const path = require("path");
 const meow = require("meow");
 const { renderApp } = require("./dist/index");
@@ -49,6 +50,12 @@ try {
     `Error: This doesn't look like a node project. No "package.json" found.`,
   );
   process.exit(1);
+}
+
+if (!cli.flags.hasOwnProperty("limit")) {
+  const workspaceItemHeight = 3;
+  const [terminalWidth, terminalHeight] = process.stdout.getWindowSize();
+  cli.flags.limit = terminalHeight / workspaceItemHeight;
 }
 
 renderApp(cli.flags);
