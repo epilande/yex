@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
+const { execSync } = require("child_process");
 const path = require("path");
 const meow = require("meow");
+const hasbin = require("hasbin");
 const { renderApp } = require("./dist/index");
 
 const cli = meow(
@@ -49,6 +51,15 @@ try {
     `Error: This doesn't look like a node project. No "package.json" found.`,
   );
   process.exit(1);
+}
+
+if (!cli.flags.hasOwnProperty("limit")) {
+  if (hasbin.sync("tput")) {
+    const workspaceItemHeight = 3;
+    cli.flags.limit =
+      parseInt(execSync("tput lines", { encoding: "utf8" })) /
+      workspaceItemHeight;
+  }
 }
 
 renderApp(cli.flags);
