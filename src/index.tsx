@@ -16,7 +16,8 @@ interface Props {
 }
 
 const App: React.FunctionComponent<Props> = ({ flags }) => {
-  const limit = Number(flags.limit) || 10;
+  const terminalHeight = Number(flags.limit) || 10;
+  const [limit, setLimit] = React.useState(terminalHeight);
   const [step, setStep] = React.useState(0);
   const [cmd, setCmd] = React.useState("");
   const [query, setQuery] = React.useState("");
@@ -24,7 +25,9 @@ const App: React.FunctionComponent<Props> = ({ flags }) => {
 
   React.useEffect(() => {
     async function getWorkspaces() {
-      setItems(await composeItems());
+      const items = await composeItems();
+      setItems(items);
+      setLimit(Math.floor(Math.min(items.length, terminalHeight)));
     }
     getWorkspaces();
   }, []);

@@ -51,4 +51,10 @@ try {
   process.exit(1);
 }
 
+if (!cli.flags.hasOwnProperty("limit")) {
+  const workspaceItemHeight = 3;
+  const [, terminalHeight] = process.stdout.getWindowSize();
+  cli.flags.limit = terminalHeight / workspaceItemHeight;
+}
+
 renderApp(cli.flags);
